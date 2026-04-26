@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hour 18: Testing your AI app | Build with AI in 20 Hours</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Mono:wght@400;500&family=Syne:wght@400;500;700;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0a0a0f; --bg2: #111118; --bg3: #16161f;
+    --surface: #1c1c28; --surface2: #22222f;
+    --border: rgba(255,255,255,0.07); --border2: rgba(255,255,255,0.12);
+    --text: #f0f0f8; --text2: #9090a8; --text3: #5a5a72;
+    --accent: #7c6dfa; --accent2: #a594fb;
+    --google: #4ade80; --claude: #fb923c; --both: #38bdf8; --project: #f472b6;
+    --gold: #fbbf24; --red: #f87171; --green: #4ade80;
+    --radius: 12px; --radius-lg: 18px;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'Syne', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+  body::before { content:''; position:fixed; inset:0; background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E"); pointer-events:none; z-index:1000; opacity:0.4; }
+
+  /* NAV */
+  .nav { position:sticky; top:0; z-index:100; background:rgba(10,10,15,0.88); backdrop-filter:blur(16px); border-bottom:1px solid var(--border); padding:12px 28px; display:flex; align-items:center; justify-content:space-between; gap:12px; }
+  .nav-logo { font-family:'DM Serif Display',serif; font-size:17px; color:var(--text); text-decoration:none; }
+  .nav-logo span { color:var(--accent2); font-style:italic; }
+  .nav-center { font-family:'DM Mono',monospace; font-size:12px; color:var(--text3); }
+  .nav-btns { display:flex; gap:8px; }
+  .nav-btn { font-family:'DM Mono',monospace; font-size:12px; padding:6px 14px; border-radius:99px; border:1px solid var(--border2); background:transparent; color:var(--text2); cursor:pointer; text-decoration:none; transition:all 0.2s; display:inline-flex; align-items:center; gap:5px; }
+  .nav-btn:hover { color:var(--text); border-color:rgba(255,255,255,0.3); }
+  .nav-btn.primary { background:var(--accent); color:#fff; border-color:var(--accent); }
+
+  /* HERO */
+  .hero { padding:56px 28px 40px; max-width:860px; margin:0 auto; }
+  .hero-top { display:flex; align-items:center; gap:16px; margin-bottom:24px; }
+  .hero-emoji { font-size:48px; line-height:1; }
+  .hero-meta { flex:1; }
+  .hero-eyebrow { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--accent2); margin-bottom:6px; }
+  .hero-title { font-family:'DM Serif Display',serif; font-size:clamp(28px,5vw,46px); line-height:1.1; letter-spacing:-0.5px; }
+  .hero-title em { font-style:italic; color:var(--accent2); }
+  .hero-desc { font-size:15px; color:var(--text2); line-height:1.75; margin-top:14px; max-width:640px; }
+  .time-strip { display:grid; grid-template-columns:repeat(3,1fr); gap:10px; margin-top:28px; }
+  .time-block { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:14px 16px; }
+  .time-block-dur { font-family:'DM Mono',monospace; font-size:10px; color:var(--text3); letter-spacing:1px; margin-bottom:4px; }
+  .time-block-name { font-size:13px; font-weight:700; color:var(--text); margin-bottom:2px; }
+  .time-block-desc { font-size:12px; color:var(--text2); }
+
+  /* CONTENT */
+  .content { max-width:860px; margin:0 auto; padding:0 28px 80px; }
+  .section { margin-bottom:44px; }
+  .section-label { font-family:'DM Mono',monospace; font-size:11px; letter-spacing:2px; text-transform:uppercase; color:var(--text3); margin-bottom:16px; display:flex; align-items:center; gap:10px; }
+  .section-label::after { content:''; flex:1; height:1px; background:var(--border); }
+  h2 { font-family:'DM Serif Display',serif; font-size:26px; color:var(--text); margin-bottom:12px; line-height:1.2; }
+  h3 { font-size:16px; font-weight:700; color:var(--text); margin-bottom:8px; }
+  p { font-size:15px; color:var(--text2); line-height:1.75; margin-bottom:14px; }
+  p:last-child { margin-bottom:0; }
+  strong { color:var(--text); font-weight:700; }
+
+  /* ANALOGY BOX */
+  .analogy { background:rgba(124,109,250,0.08); border-left:2px solid var(--accent); border-radius:0 10px 10px 0; padding:16px 18px; margin:20px 0; }
+  .analogy-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--accent2); margin-bottom:6px; }
+  .analogy p { font-size:14px; font-style:italic; color:var(--text); margin:0; }
+
+  /* CONCEPT CARDS */
+  .concept-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:12px; margin:20px 0; }
+  .concept-card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .concept-card-icon { font-size:22px; margin-bottom:10px; }
+  .concept-card h3 { font-size:14px; margin-bottom:6px; }
+  .concept-card p { font-size:13px; color:var(--text2); margin:0; line-height:1.6; }
+
+  /* CODE BLOCKS */
+  .code-block { background:var(--bg3); border:1px solid var(--border); border-radius:var(--radius); margin:20px 0; overflow:hidden; }
+  .code-header { display:flex; align-items:center; justify-content:space-between; padding:10px 16px; border-bottom:1px solid var(--border); }
+  .code-lang { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); letter-spacing:1px; text-transform:uppercase; }
+  .code-copy { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); background:none; border:none; cursor:pointer; padding:2px 6px; border-radius:4px; }
+  .code-copy:hover { color:var(--text2); background:var(--surface); }
+  pre { padding:18px; overflow-x:auto; font-family:'DM Mono',monospace; font-size:13px; line-height:1.7; color:#c9d1d9; }
+  .kw { color:#ff79c6; } .str { color:#f1fa8c; } .cm { color:#6272a4; font-style:italic; }
+  .fn { color:#50fa7b; } .num { color:#bd93f9; } .var { color:#8be9fd; }
+
+  /* STEP BOXES */
+  .steps { display:flex; flex-direction:column; gap:12px; margin:20px 0; }
+  .step { display:flex; gap:14px; background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; }
+  .step-num { width:28px; height:28px; border-radius:50%; background:var(--accent); color:#fff; font-family:'DM Mono',monospace; font-size:12px; font-weight:500; display:flex; align-items:center; justify-content:center; flex-shrink:0; margin-top:1px; }
+  .step-body h3 { font-size:14px; margin-bottom:4px; }
+  .step-body p { font-size:13px; color:var(--text2); margin:0; line-height:1.6; }
+
+  /* WARNING / TIP */
+  .callout { border-radius:var(--radius); padding:14px 16px; margin:20px 0; display:flex; gap:12px; }
+  .callout-warn { background:rgba(251,146,60,0.08); border:1px solid rgba(251,146,60,0.2); }
+  .callout-tip { background:rgba(74,222,128,0.08); border:1px solid rgba(74,222,128,0.2); }
+  .callout-icon { font-size:18px; flex-shrink:0; }
+  .callout-body p { font-size:13px; line-height:1.6; margin:0; }
+  .callout-warn .callout-body p { color:#fdba74; }
+  .callout-tip .callout-body p { color:#86efac; }
+
+  /* EXERCISE */
+  .exercise { background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-lg); overflow:hidden; margin:20px 0; }
+  .exercise-header { padding:14px 18px; border-bottom:1px solid var(--border); display:flex; align-items:center; gap:10px; }
+  .exercise-num { font-family:'DM Mono',monospace; font-size:11px; color:var(--text3); }
+  .exercise-title { font-size:15px; font-weight:700; color:var(--text); }
+  .exercise-body { padding:18px; }
+  .exercise-body p { font-size:14px; color:var(--text2); margin-bottom:14px; }
+  textarea { width:100%; background:var(--bg3); border:1px solid var(--border2); border-radius:8px; color:var(--text); font-family:'DM Mono',monospace; font-size:13px; padding:12px; resize:vertical; min-height:90px; outline:none; line-height:1.6; }
+  textarea:focus { border-color:var(--accent); }
+  .ex-btn { font-family:'DM Mono',monospace; font-size:12px; padding:8px 18px; border-radius:99px; border:1px solid var(--accent); background:transparent; color:var(--accent); cursor:pointer; transition:all 0.2s; margin-top:10px; }
+  .ex-btn:hover { background:var(--accent); color:#fff; }
+  .ex-result { margin-top:12px; padding:12px 14px; background:var(--bg3); border-radius:8px; font-size:13px; color:var(--text2); line-height:1.6; display:none; }
+  .ex-result.show { display:block; }
+
+  /* QUIZ */
+  .quiz { background:var(--surface); border:1px solid var(--border2); border-radius:var(--radius-lg); overflow:hidden; margin:20px 0; }
+  .quiz-header { padding:16px 20px; border-bottom:1px solid var(--border); }
+  .quiz-header h3 { font-size:16px; font-weight:700; }
+  .quiz-header p { font-size:13px; color:var(--text2); margin-top:4px; margin-bottom:0; }
+  .quiz-body { padding:20px; }
+  .quiz-q { margin-bottom:24px; }
+  .quiz-q-text { font-size:14px; font-weight:700; color:var(--text); margin-bottom:12px; }
+  .quiz-options { display:flex; flex-direction:column; gap:8px; }
+  .quiz-opt { background:var(--bg3); border:1px solid var(--border); border-radius:8px; padding:10px 14px; font-size:13px; color:var(--text2); cursor:pointer; transition:all 0.15s; text-align:left; }
+  .quiz-opt:hover { border-color:var(--border2); color:var(--text); }
+  .quiz-opt.correct { background:rgba(74,222,128,0.1); border-color:var(--green); color:var(--green); }
+  .quiz-opt.wrong { background:rgba(248,113,113,0.1); border-color:var(--red); color:var(--red); }
+  .quiz-opt.disabled { cursor:default; }
+  .quiz-feedback { font-size:13px; margin-top:8px; padding:8px 12px; border-radius:6px; display:none; }
+  .quiz-feedback.show { display:block; }
+  .quiz-feedback.ok { background:rgba(74,222,128,0.08); color:var(--green); }
+  .quiz-feedback.bad { background:rgba(248,113,113,0.08); color:var(--red); }
+  .quiz-score { text-align:center; padding:16px; display:none; }
+  .quiz-score-num { font-family:'DM Serif Display',serif; font-size:40px; color:var(--accent2); }
+  .quiz-score p { font-size:14px; color:var(--text2); margin-top:6px; margin-bottom:0; }
+
+  /* BUILD BOX */
+  .build-box { background:var(--bg3); border:1px solid rgba(251,191,36,0.2); border-radius:var(--radius); padding:18px 20px; margin:24px 0; }
+  .build-box-label { font-family:'DM Mono',monospace; font-size:10px; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; display:flex; align-items:center; gap:6px; }
+  .build-box-label::before { content:'⚡'; font-size:13px; }
+  .build-box h3 { font-size:15px; font-weight:700; color:var(--text); margin-bottom:6px; }
+  .build-box p { font-size:13px; color:var(--text2); margin:0; line-height:1.6; }
+
+  /* NEXT / PREV */
+  .nav-footer { display:flex; justify-content:space-between; align-items:center; padding:32px 0 0; border-top:1px solid var(--border); margin-top:20px; flex-wrap:wrap; gap:12px; }
+  .nav-footer a { font-family:'DM Mono',monospace; font-size:13px; padding:10px 20px; border-radius:99px; border:1px solid var(--border2); color:var(--text2); text-decoration:none; transition:all 0.2s; }
+  .nav-footer a:hover { color:var(--text); border-color:rgba(255,255,255,0.3); }
+  .nav-footer a.next { background:var(--accent); color:#fff; border-color:var(--accent); }
+  .nav-footer-center { font-family:'DM Mono',monospace; font-size:12px; color:var(--text3); }
+
+  @media(max-width:600px){ .hero{ padding:36px 16px 28px; } .content{ padding:0 16px 60px; } .time-strip{ grid-template-columns:1fr; } .nav{ padding:10px 16px; } .hero-top{ flex-direction:column; align-items:flex-start; } }
+  @keyframes fadeUp { from{opacity:0;transform:translateY(14px)} to{opacity:1;transform:translateY(0)} }
+  .hero { animation: fadeUp 0.5s ease both; }
+  .content { animation: fadeUp 0.5s ease 0.1s both; }
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <a href="../index.html" class="nav-logo">Build with <em>AI</em></a>
+  <div class="nav-center">Hour 18 of 20</div>
+  <div class="nav-btns">
+    <a class="nav-btn" href="hour-17.html">← Hour 17: Speed & cost optimisation</a>
+    <a class="nav-btn primary" href="hour-19.html" class="next">Hour 19: Deploying to the world →</a>
+  </div>
+</nav>
+
+<section class="hero">
+  <div class="hero-top">
+    <div class="hero-emoji">🧪</div>
+    <div class="hero-meta">
+      <div class="hero-eyebrow">Hour 18 · <span style="color:var(--project)">Project milestone</span></div>
+      <h1 class="hero-title">Testing your AI app</h1>
+    </div>
+  </div>
+  <p class="hero-desc">AI apps fail in ways normal software doesn't. Learn how to test an app where outputs are non-deterministic, run 10 real user sessions, and systematically fix what breaks.</p>
+  <div class="time-strip">
+    <div class="time-block">
+      <div class="time-block-dur">0 – 15 min</div>
+      <div class="time-block-name">Concepts</div>
+      <div class="time-block-desc">Read & understand the ideas</div>
+    </div>
+    <div class="time-block">
+      <div class="time-block-dur">15 – 45 min</div>
+      <div class="time-block-name">Hands-on</div>
+      <div class="time-block-desc">Try it yourself — touch the keyboard</div>
+    </div>
+    <div class="time-block">
+      <div class="time-block-dur">45 – 60 min</div>
+      <div class="time-block-name">Review</div>
+      <div class="time-block-desc">Quiz yourself, check understanding</div>
+    </div>
+  </div>
+</section>
+
+<div class="content">
+  <div class="section"><div class="section-label">Part 1 — Concepts (0–15 min)</div><h2>Testing your AI app</h2><p>AI apps fail in ways normal software doesn't. Learn how to test an app where outputs are non-deterministic, run 10 real user sessions, and systematically fix what breaks.</p><div class="concept-grid"><div class="concept-card"><div class="concept-card-icon">🎲</div><h3>Non-determinism</h3><p>The same prompt can return different outputs each time. This makes traditional testing ('expect output to equal X') impossible. Test for structure, length, format, and safety — not exact content.</p></div><div class="concept-card"><div class="concept-card-icon">📋</div><h3>Test categories</h3><p>(1) Happy path: normal inputs work correctly. (2) Edge cases: empty, too long, unusual characters. (3) Adversarial: attempts to misuse the app. (4) Performance: does it work under load? (5) Regression: does it still work after you change a prompt?</p></div><div class="concept-card"><div class="concept-card-icon">👥</div><h3>Real user testing</h3><p>Give 5 real people your app and watch them use it without helping. You will be amazed at what they click, type, and expect that you never anticipated. This is worth 10x more than automated tests.</p></div><div class="concept-card"><div class="concept-card-icon">📝</div><h3>Bug prioritisation</h3><p>Rank bugs: Critical (app crashes or gives wrong info), High (key feature broken), Medium (annoying but usable), Low (cosmetic). Fix Critical and High before launch.</p></div></div></div><div class="section"><div class="section-label">Part 2 — Hands-on Practice (15–45 min)</div><h2>Build it</h2><div class="code-block">
+  <div class="code-header"><span class="code-lang">javascript</span><button class="code-copy">Copy</button></div>
+  <pre>// Automated test suite for AI app behaviours
+// Run with: node tests.js
+
+const { generateQuiz, safeAICall } = require('./your-app');
+
+async function runTests() {
+  const results = [];
+
+  async function test(name, fn) {
+    try {
+      await fn();
+      results.push({ name, passed: true });
+      console.log(`✅ ${name}`);
+    } catch (e) {
+      results.push({ name, passed: false, error: e.message });
+      console.log(`❌ ${name}: ${e.message}`);
+    }
+  }
+
+  // Test 1: Quiz generates correct structure
+  await test('generateQuiz returns 5 questions', async () => {
+    const qs = await generateQuiz('Photosynthesis');
+    if (qs.length !== 5) throw new Error(`Got ${qs.length} questions, expected 5`);
+    qs.forEach((q, i) => {
+      if (!q.question) throw new Error(`Q${i+1} missing question field`);
+      if (!Array.isArray(q.options) || q.options.length !== 4) throw new Error(`Q${i+1} wrong options`);
+      if (typeof q.correct !== 'number' || q.correct < 0 || q.correct > 3) throw new Error(`Q${i+1} invalid correct index`);
+    });
+  });
+
+  // Test 2: Empty input handled gracefully
+  await test('Empty input returns friendly message', async () => {
+    const result = await safeAICall('');
+    if (result.success !== false) throw new Error('Should have failed validation');
+    if (!result.response.includes('Please')) throw new Error('Response should guide user');
+  });
+
+  // Test 3: Very long input handled
+  await test('Long input handled gracefully', async () => {
+    const longInput = 'a'.repeat(10000);
+    const result = await safeAICall(longInput);
+    if (result.success !== false) throw new Error('Should have rejected long input');
+  });
+
+  // Test 4: Quiz topics produce relevant questions
+  await test('Physics quiz contains physics terms', async () => {
+    const qs = await generateQuiz('Newton laws of motion');
+    const allText = qs.map(q => q.question + q.options.join(' ')).join(' ').toLowerCase();
+    const physicsTerms = ['force', 'mass', 'acceleration', 'motion', 'newton', 'velocity'];
+    const found = physicsTerms.filter(t => allText.includes(t));
+    if (found.length < 2) throw new Error(`Expected physics terms in quiz, found: ${found.join(', ')}`);
+  });
+
+  const passed = results.filter(r => r.passed).length;
+  console.log(`\n${passed}/${results.length} tests passed`);
+  return results;
+}
+
+runTests();</pre>
+</div><div class="exercise">
+  <div class="exercise-header"><span class="exercise-num">Exercise 1</span><span class="exercise-title">Run a 10-person user test</span></div>
+  <div class="exercise-body">
+    <p>Find 5 students and 5 adults who haven't seen your app. Watch them use it for 10 minutes. Don't explain anything. Just watch and take notes. What confuses them? Where do they click that doesn't work?</p>
+    <textarea placeholder="Type your answer or notes here..."></textarea>
+    <button class="ex-btn">Show sample answer</button>
+    <div class="ex-result">Write down every moment of confusion, every wrong click, every feature they expected but wasn't there. Group these into: UI confusion (they didn't know what to do), missing features (they wanted something you didn't build), AI issues (Claude said something wrong or weird). Fix at least 3 things immediately.</div>
+  </div>
+</div><div class="exercise">
+  <div class="exercise-header"><span class="exercise-num">Exercise 2</span><span class="exercise-title">Build a prompt regression suite</span></div>
+  <div class="exercise-body">
+    <p>Every time you change a prompt, run your automated tests to check nothing broke. Create 5 test cases that represent real user scenarios and expected output structure.</p>
+    <textarea placeholder="Type your answer or notes here..."></textarea>
+    <button class="ex-btn">Show sample answer</button>
+    <div class="ex-result">Example regression tests: (1) Biology topic generates biology questions (not random topics), (2) Grading returns isCorrect boolean, (3) Coaching insight is encouraging (check for negative words like 'failed', 'terrible', 'awful'), (4) Translation of 'hello' to French returns 'Bonjour', (5) Safety filter catches 'write my essay'.</div>
+  </div>
+</div></div><div class="section"><div class="section-label">Part 3 — Review (45–60 min)</div><div class="quiz"><div class="quiz-header"><h3>Check your understanding</h3><p>Answer all questions to see your score.</p></div><div class="quiz-body"><div class="quiz-q" data-qid="0"><div class="quiz-q-text">Q1. Why can't you test an AI app the same way as regular software?</div><div class="quiz-options"><button class="quiz-opt" data-correct="0">AI is too expensive to test</button><button class="quiz-opt" data-correct="1">AI output is non-deterministic — the same input can produce different valid outputs each time, making exact-match testing impossible</button><button class="quiz-opt" data-correct="0">AI tests require special hardware</button><button class="quiz-opt" data-correct="0">Anthropic doesn't allow automated testing</button></div><div class="quiz-feedback">✅ Traditional software: input X always produces output Y. Test that Y equals expected. AI: input X might produce Y, or Y', or Y'' — all valid. Test that the output has the right structure, length, format, and tone — not the exact words.</div></div><div class="quiz-q" data-qid="1"><div class="quiz-q-text">Q2. You run your app with 5 real users and 4 of them immediately try to click something that doesn't exist. What do you do?</div><div class="quiz-options"><button class="quiz-opt" data-correct="0">Tell them they're using it wrong</button><button class="quiz-opt" data-correct="1">Add the thing they're looking for — 4 out of 5 is overwhelming evidence</button><button class="quiz-opt" data-correct="0">Remove the area they're clicking</button><button class="quiz-opt" data-correct="0">Add a tooltip explaining the missing feature</button></div><div class="quiz-feedback">✅ 4/5 users looking for the same thing is very clear product signal. They're not wrong — your app didn't meet their expectation. Either add the feature or dramatically change the UI so they don't expect it. Never fight user expectations.</div></div><div class="quiz-q" data-qid="2"><div class="quiz-q-text">Q3. What is a 'prompt regression test'?</div><div class="quiz-options"><button class="quiz-opt" data-correct="0">A test that makes prompts shorter over time</button><button class="quiz-opt" data-correct="1">A test that verifies a prompt still produces valid output after you modify it</button><button class="quiz-opt" data-correct="0">A test that runs the same prompt 1000 times</button><button class="quiz-opt" data-correct="0">A test that checks API response time</button></div><div class="quiz-feedback">✅ When you change a prompt to improve one thing, you might accidentally break another. Regression tests catch this: run your test suite after every prompt change to verify existing functionality still works.</div></div><div class="quiz-score"><div class="quiz-score-num">0/0</div><p>Great work! Move to the next hour when you're ready.</p></div></div></div><div class="build-box"><div class="build-box-label">What you build this hour</div><h3>App tested and hardened</h3><p>10 real user sessions completed. Top 3 issues fixed. Automated test suite catches regressions. The app handles edge cases gracefully. You know exactly what works and what doesn't.</p></div></div>
+
+  
+
+  <div class="nav-footer">
+    <a href="hour-17.html">← Hour 17: Speed & cost optimisation</a>
+    <div class="nav-footer-center">Hour 18 of 20</div>
+    <a href="hour-19.html" class="next">Hour 19: Deploying to the world →</a>
+  </div>
+</div>
+
+<script>
+// Copy code button
+document.querySelectorAll('.code-copy').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const pre = btn.closest('.code-block').querySelector('pre');
+    navigator.clipboard.writeText(pre.innerText).then(() => {
+      btn.textContent = 'Copied!';
+      setTimeout(() => btn.textContent = 'Copy', 1500);
+    });
+  });
+});
+
+// Exercise show-answer
+document.querySelectorAll('.ex-btn').forEach(btn => {
+  btn.addEventListener('click', () => {
+    const res = btn.nextElementSibling;
+    res.classList.toggle('show');
+    btn.textContent = res.classList.contains('show') ? 'Hide answer' : 'Show answer';
+  });
+});
+
+// Quiz
+let scores = {};
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const q = opt.closest('.quiz-q');
+    if (q.dataset.answered) return;
+    q.dataset.answered = '1';
+    const correct = opt.dataset.correct === '1';
+    opt.classList.add(correct ? 'correct' : 'wrong');
+    q.querySelectorAll('.quiz-opt').forEach(o => o.classList.add('disabled'));
+    const fb = q.querySelector('.quiz-feedback');
+    fb.classList.add('show', correct ? 'ok' : 'bad');
+    if (!correct) {
+      q.querySelectorAll('[data-correct="1"]').forEach(o => o.classList.add('correct'));
+    }
+    const qid = q.dataset.qid;
+    scores[qid] = correct ? 1 : 0;
+    checkAll();
+  });
+});
+
+function checkAll() {
+  const qs = document.querySelectorAll('.quiz-q');
+  if (Object.keys(scores).length === qs.length) {
+    const total = Object.values(scores).reduce((a,b) => a+b, 0);
+    const sc = document.querySelector('.quiz-score');
+    if (sc) {
+      sc.querySelector('.quiz-score-num').textContent = total + '/' + qs.length;
+      sc.style.display = 'block';
+    }
+  }
+}
+</script>
+</body>
+</html>
