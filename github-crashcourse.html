@@ -1,0 +1,1698 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>GitHub in 1 Hour — For Non-Developers</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@400;500&family=Nunito:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root {
+  --ink: #1a1a2e;
+  --ink2: #2d2d44;
+  --paper: #faf9f6;
+  --paper2: #f2f0eb;
+  --paper3: #e8e5dd;
+  --accent: #e85d26;
+  --accent2: #f5a623;
+  --blue: #2563eb;
+  --green: #16a34a;
+  --red: #dc2626;
+  --purple: #7c3aed;
+  --border: rgba(26,26,46,0.1);
+  --border2: rgba(26,26,46,0.2);
+  --shadow: 0 2px 16px rgba(26,26,46,0.08);
+  --shadow-lg: 0 8px 40px rgba(26,26,46,0.12);
+  --radius: 12px;
+  --radius-lg: 20px;
+}
+
+* { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; }
+
+body {
+  font-family: 'Nunito', sans-serif;
+  background: var(--paper);
+  color: var(--ink);
+  min-height: 100vh;
+  line-height: 1.6;
+}
+
+/* ── PROGRESS BAR ── */
+.progress-bar {
+  position: fixed;
+  top: 0; left: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--accent2));
+  z-index: 999;
+  transition: width 0.3s ease;
+  width: 0%;
+}
+
+/* ── NAV ── */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  background: rgba(250,249,246,0.92);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--border);
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  height: 56px;
+  gap: 16px;
+}
+
+.nav-logo {
+  font-family: 'Playfair Display', serif;
+  font-size: 18px;
+  color: var(--ink);
+  flex-shrink: 0;
+}
+
+.nav-logo span { color: var(--accent); font-style: italic; }
+
+.nav-chapters {
+  display: flex;
+  gap: 4px;
+  overflow-x: auto;
+  flex: 1;
+  scrollbar-width: none;
+}
+
+.nav-chapters::-webkit-scrollbar { display: none; }
+
+.nav-ch {
+  flex-shrink: 0;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  padding: 5px 12px;
+  border-radius: 99px;
+  border: 1px solid var(--border2);
+  color: var(--ink2);
+  cursor: pointer;
+  background: transparent;
+  transition: all 0.2s;
+  white-space: nowrap;
+}
+
+.nav-ch:hover { background: var(--paper2); }
+.nav-ch.active { background: var(--accent); color: white; border-color: var(--accent); }
+
+.nav-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  color: var(--accent);
+  flex-shrink: 0;
+  background: rgba(232,93,38,0.08);
+  padding: 4px 10px;
+  border-radius: 99px;
+}
+
+/* ── HERO ── */
+.hero {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 72px 24px 56px;
+  text-align: center;
+}
+
+.hero-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  background: rgba(232,93,38,0.08);
+  padding: 6px 14px;
+  border-radius: 99px;
+  margin-bottom: 24px;
+}
+
+.hero h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(38px, 7vw, 72px);
+  line-height: 1.05;
+  letter-spacing: -1px;
+  color: var(--ink);
+  margin-bottom: 16px;
+}
+
+.hero h1 em { font-style: italic; color: var(--accent); }
+
+.hero-sub {
+  font-size: 17px;
+  color: var(--ink2);
+  max-width: 520px;
+  margin: 0 auto 36px;
+  line-height: 1.7;
+}
+
+.hero-stats {
+  display: flex;
+  justify-content: center;
+  gap: 0;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  background: white;
+  max-width: 480px;
+  margin: 0 auto 40px;
+  box-shadow: var(--shadow);
+}
+
+.stat {
+  flex: 1;
+  padding: 16px 12px;
+  border-right: 1px solid var(--border);
+  text-align: center;
+}
+
+.stat:last-child { border-right: none; }
+.stat-num { font-family: 'Playfair Display', serif; font-size: 26px; color: var(--accent); line-height: 1; }
+.stat-label { font-size: 11px; color: var(--ink2); margin-top: 3px; font-family: 'DM Mono', monospace; letter-spacing: 0.5px; }
+
+.start-btn {
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 14px 36px;
+  border-radius: 99px;
+  font-family: 'Nunito', sans-serif;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  box-shadow: 0 4px 20px rgba(232,93,38,0.3);
+}
+
+.start-btn:hover { transform: translateY(-2px); box-shadow: 0 6px 28px rgba(232,93,38,0.4); }
+
+/* ── CONTENT ── */
+.content {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 0 24px 80px;
+}
+
+/* ── CHAPTER ── */
+.chapter {
+  margin-bottom: 72px;
+  scroll-margin-top: 80px;
+}
+
+.chapter-header {
+  display: flex;
+  align-items: flex-start;
+  gap: 20px;
+  margin-bottom: 28px;
+  padding-bottom: 24px;
+  border-bottom: 2px solid var(--paper3);
+}
+
+.chapter-num {
+  font-family: 'Playfair Display', serif;
+  font-size: 56px;
+  color: var(--paper3);
+  line-height: 1;
+  flex-shrink: 0;
+  font-weight: 700;
+}
+
+.chapter-meta { flex: 1; padding-top: 6px; }
+
+.chapter-tag {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 6px;
+}
+
+.chapter-title {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(22px, 4vw, 34px);
+  line-height: 1.15;
+  color: var(--ink);
+  margin-bottom: 6px;
+}
+
+.chapter-time {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink2);
+  background: var(--paper2);
+  display: inline-block;
+  padding: 3px 10px;
+  border-radius: 99px;
+}
+
+/* ── PROSE ── */
+p { font-size: 16px; color: var(--ink2); line-height: 1.8; margin-bottom: 16px; }
+p strong { color: var(--ink); font-weight: 700; }
+p:last-child { margin-bottom: 0; }
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: 24px;
+  color: var(--ink);
+  margin: 32px 0 12px;
+  line-height: 1.2;
+}
+
+h3 { font-size: 16px; font-weight: 700; color: var(--ink); margin-bottom: 6px; }
+
+/* ── ANALOGY BOX ── */
+.analogy {
+  background: linear-gradient(135deg, rgba(232,93,38,0.06), rgba(245,166,35,0.06));
+  border-left: 3px solid var(--accent);
+  border-radius: 0 var(--radius) var(--radius) 0;
+  padding: 18px 20px;
+  margin: 20px 0;
+}
+
+.analogy-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 8px;
+}
+
+.analogy p { font-size: 15px; color: var(--ink); font-style: italic; margin: 0; }
+
+/* ── CONCEPT CARDS ── */
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 12px;
+  margin: 20px 0;
+}
+
+.card {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 18px;
+  box-shadow: var(--shadow);
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.card:hover { transform: translateY(-2px); box-shadow: var(--shadow-lg); }
+.card-icon { font-size: 24px; margin-bottom: 10px; }
+.card h3 { font-size: 14px; margin-bottom: 6px; }
+.card p { font-size: 13px; color: var(--ink2); margin: 0; line-height: 1.6; }
+
+/* ── STEPS ── */
+.steps { display: flex; flex-direction: column; gap: 2px; margin: 20px 0; }
+
+.step {
+  display: flex;
+  gap: 0;
+  position: relative;
+}
+
+.step-line {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex-shrink: 0;
+  width: 40px;
+}
+
+.step-dot {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: white;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  z-index: 1;
+}
+
+.step-connector {
+  width: 2px;
+  flex: 1;
+  background: var(--paper3);
+  min-height: 20px;
+}
+
+.step:last-child .step-connector { display: none; }
+
+.step-body {
+  padding: 4px 0 24px 16px;
+  flex: 1;
+}
+
+.step-body h3 { font-size: 15px; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: var(--ink2); margin: 0; line-height: 1.6; }
+
+/* ── CODE ── */
+.code-block {
+  background: var(--ink);
+  border-radius: var(--radius);
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: var(--shadow-lg);
+}
+
+.code-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 16px;
+  background: var(--ink2);
+}
+
+.code-dots { display: flex; gap: 6px; }
+.code-dot { width: 12px; height: 12px; border-radius: 50%; }
+.code-dot-r { background: #ff5f57; }
+.code-dot-y { background: #febc2e; }
+.code-dot-g { background: #28c840; }
+
+.code-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.4);
+  letter-spacing: 1px;
+}
+
+.code-copy-btn {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: rgba(255,255,255,0.5);
+  background: none;
+  border: 1px solid rgba(255,255,255,0.15);
+  border-radius: 4px;
+  padding: 3px 8px;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.code-copy-btn:hover { color: white; border-color: rgba(255,255,255,0.4); }
+
+pre {
+  padding: 20px;
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  line-height: 1.8;
+  color: #e2e8f0;
+  overflow-x: auto;
+}
+
+.cm { color: #64748b; font-style: italic; }
+.kw { color: #fb923c; }
+.str { color: #86efac; }
+.cmd { color: #7dd3fc; }
+.out { color: #a3e635; }
+
+/* ── CALLOUTS ── */
+.callout {
+  display: flex;
+  gap: 14px;
+  padding: 16px 18px;
+  border-radius: var(--radius);
+  margin: 20px 0;
+}
+
+.callout-tip { background: rgba(22,163,74,0.07); border: 1px solid rgba(22,163,74,0.2); }
+.callout-warn { background: rgba(220,38,38,0.06); border: 1px solid rgba(220,38,38,0.15); }
+.callout-info { background: rgba(37,99,235,0.06); border: 1px solid rgba(37,99,235,0.15); }
+
+.callout-icon { font-size: 20px; flex-shrink: 0; line-height: 1.4; }
+.callout-body p { font-size: 14px; margin: 0; line-height: 1.6; }
+.callout-tip .callout-body p { color: #15803d; }
+.callout-warn .callout-body p { color: #b91c1c; }
+.callout-info .callout-body p { color: #1d4ed8; }
+.callout-body strong { font-weight: 700; }
+
+/* ── QUIZ ── */
+.quiz {
+  background: white;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 24px 0;
+  box-shadow: var(--shadow);
+}
+
+.quiz-header {
+  padding: 18px 22px;
+  border-bottom: 1px solid var(--border);
+  background: var(--paper2);
+}
+
+.quiz-header h3 { font-family: 'Playfair Display', serif; font-size: 18px; margin-bottom: 2px; }
+.quiz-header p { font-size: 13px; color: var(--ink2); margin: 0; }
+
+.quiz-body { padding: 20px 22px; }
+
+.quiz-q { margin-bottom: 24px; }
+.quiz-q:last-of-type { margin-bottom: 0; }
+
+.quiz-q-text { font-size: 15px; font-weight: 700; color: var(--ink); margin-bottom: 10px; }
+
+.quiz-opts { display: flex; flex-direction: column; gap: 8px; }
+
+.quiz-opt {
+  background: var(--paper);
+  border: 1px solid var(--border2);
+  border-radius: 8px;
+  padding: 10px 14px;
+  font-size: 14px;
+  color: var(--ink2);
+  cursor: pointer;
+  text-align: left;
+  font-family: 'Nunito', sans-serif;
+  transition: all 0.15s;
+  line-height: 1.4;
+}
+
+.quiz-opt:hover:not(:disabled) { border-color: var(--accent); color: var(--ink); background: rgba(232,93,38,0.04); }
+.quiz-opt.correct { background: rgba(22,163,74,0.08); border-color: var(--green); color: var(--green); font-weight: 700; }
+.quiz-opt.wrong { background: rgba(220,38,38,0.07); border-color: var(--red); color: var(--red); }
+.quiz-opt:disabled { cursor: default; }
+
+.quiz-feedback {
+  font-size: 13px;
+  padding: 10px 12px;
+  border-radius: 6px;
+  margin-top: 8px;
+  display: none;
+  line-height: 1.5;
+}
+.quiz-feedback.show { display: block; }
+.quiz-feedback.ok { background: rgba(22,163,74,0.07); color: #15803d; }
+.quiz-feedback.bad { background: rgba(220,38,38,0.07); color: #b91c1c; }
+
+.quiz-score { text-align: center; padding: 20px; display: none; border-top: 1px solid var(--border); }
+.quiz-score-num { font-family: 'Playfair Display', serif; font-size: 48px; color: var(--accent); }
+.quiz-score p { font-size: 14px; color: var(--ink2); margin-top: 4px; margin-bottom: 0; }
+
+/* ── CHEATSHEET ── */
+.cheatsheet {
+  background: var(--ink);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 24px 0;
+  box-shadow: var(--shadow-lg);
+}
+
+.cheatsheet-header {
+  padding: 16px 22px;
+  background: var(--accent);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cheatsheet-header h3 { color: white; font-size: 16px; }
+
+.cheatsheet-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1px;
+  background: rgba(255,255,255,0.05);
+}
+
+@media (max-width: 600px) { .cheatsheet-grid { grid-template-columns: 1fr; } }
+
+.cheatsheet-item {
+  padding: 14px 18px;
+  background: var(--ink);
+}
+
+.cheatsheet-cmd {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  color: #7dd3fc;
+  margin-bottom: 4px;
+}
+
+.cheatsheet-desc {
+  font-size: 12px;
+  color: rgba(255,255,255,0.5);
+  line-height: 1.4;
+}
+
+/* ── VISUAL DIAGRAM ── */
+.diagram {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: 20px 0;
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+
+.diagram-row {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  flex-wrap: wrap;
+  margin-bottom: 8px;
+}
+
+.d-box {
+  background: var(--paper2);
+  border: 2px solid var(--border2);
+  border-radius: 10px;
+  padding: 12px 18px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--ink);
+  min-width: 100px;
+  text-align: center;
+}
+
+.d-box.accent { background: rgba(232,93,38,0.1); border-color: var(--accent); color: var(--accent); }
+.d-box.blue { background: rgba(37,99,235,0.08); border-color: var(--blue); color: var(--blue); }
+.d-box.green { background: rgba(22,163,74,0.08); border-color: var(--green); color: var(--green); }
+
+.d-arrow {
+  font-size: 18px;
+  color: var(--ink2);
+  font-weight: 700;
+}
+
+.d-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 11px;
+  color: var(--ink2);
+  margin-top: 6px;
+}
+
+/* ── EXERCISE ── */
+.exercise {
+  background: white;
+  border: 1px solid var(--border2);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: var(--shadow);
+}
+
+.exercise-header {
+  padding: 14px 18px;
+  background: linear-gradient(135deg, rgba(232,93,38,0.08), rgba(245,166,35,0.08));
+  border-bottom: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ex-badge {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  background: var(--accent);
+  color: white;
+  padding: 2px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.5px;
+}
+
+.exercise-header h3 { font-size: 14px; font-weight: 700; color: var(--ink); }
+.exercise-body { padding: 18px; }
+.exercise-body p { font-size: 14px; }
+
+.try-btn {
+  display: inline-block;
+  margin-top: 12px;
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  padding: 8px 18px;
+  border-radius: 99px;
+  border: 1px solid var(--accent);
+  color: var(--accent);
+  background: transparent;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.try-btn:hover { background: var(--accent); color: white; }
+
+.try-result {
+  margin-top: 12px;
+  padding: 14px;
+  background: var(--paper2);
+  border-radius: 8px;
+  font-size: 13px;
+  color: var(--ink2);
+  line-height: 1.6;
+  display: none;
+  border-left: 3px solid var(--accent);
+}
+
+.try-result.show { display: block; }
+
+/* ── CHAPTER NAV ── */
+.chapter-nav {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24px 0 0;
+  border-top: 1px solid var(--border);
+  margin-top: 16px;
+  gap: 12px;
+}
+
+.chapter-nav a {
+  font-family: 'DM Mono', monospace;
+  font-size: 13px;
+  padding: 10px 20px;
+  border-radius: 99px;
+  border: 1px solid var(--border2);
+  color: var(--ink2);
+  text-decoration: none;
+  transition: all 0.2s;
+}
+
+.chapter-nav a:hover { color: var(--ink); border-color: var(--ink); }
+.chapter-nav a.next-ch { background: var(--accent); color: white; border-color: var(--accent); }
+.chapter-nav a.next-ch:hover { opacity: 0.9; }
+
+/* ── SUMMARY BOX ── */
+.summary {
+  background: linear-gradient(135deg, var(--ink), var(--ink2));
+  border-radius: var(--radius-lg);
+  padding: 24px 26px;
+  margin: 24px 0;
+  color: white;
+}
+
+.summary-label {
+  font-family: 'DM Mono', monospace;
+  font-size: 10px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--accent2);
+  margin-bottom: 12px;
+}
+
+.summary ul { list-style: none; display: flex; flex-direction: column; gap: 8px; }
+.summary li { font-size: 14px; color: rgba(255,255,255,0.85); display: flex; gap: 10px; align-items: flex-start; line-height: 1.5; }
+.summary li::before { content: '✓'; color: var(--accent2); font-weight: 700; flex-shrink: 0; }
+
+/* ── RESPONSIVE ── */
+@media (max-width: 600px) {
+  .cards { grid-template-columns: 1fr; }
+  .hero h1 { font-size: 36px; }
+  .chapter-num { font-size: 40px; }
+  .nav-ch { font-size: 10px; padding: 4px 10px; }
+}
+
+/* ── ANIMATIONS ── */
+@keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+.hero { animation: fadeUp 0.6s ease both; }
+.content { animation: fadeUp 0.6s ease 0.15s both; }
+
+/* ── HIGHLIGHT ── */
+mark {
+  background: linear-gradient(120deg, rgba(245,166,35,0.3), rgba(232,93,38,0.2));
+  border-radius: 3px;
+  padding: 0 3px;
+  color: var(--ink);
+}
+
+kbd {
+  font-family: 'DM Mono', monospace;
+  font-size: 12px;
+  background: var(--paper2);
+  border: 1px solid var(--border2);
+  border-bottom: 2px solid var(--border2);
+  border-radius: 4px;
+  padding: 2px 6px;
+  color: var(--ink);
+}
+</style>
+</head>
+<body>
+
+<div class="progress-bar" id="progressBar"></div>
+
+<!-- NAV -->
+<nav class="nav">
+  <div class="nav-logo">Git<span>Hub</span></div>
+  <div class="nav-chapters">
+    <button class="nav-ch active" onclick="scrollTo('ch1')">1. What is it?</button>
+    <button class="nav-ch" onclick="scrollTo('ch2')">2. Key concepts</button>
+    <button class="nav-ch" onclick="scrollTo('ch3')">3. Your first repo</button>
+    <button class="nav-ch" onclick="scrollTo('ch4')">4. Daily workflow</button>
+    <button class="nav-ch" onclick="scrollTo('ch5')">5. Branches</button>
+    <button class="nav-ch" onclick="scrollTo('ch6')">6. Common fixes</button>
+    <button class="nav-ch" onclick="scrollTo('ch7')">7. Cheat sheet</button>
+  </div>
+  <div class="nav-time" id="navTime">⏱ 0 min</div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">🎓 Non-developer friendly</div>
+  <h1>GitHub in<br><em>One Hour</em></h1>
+  <p class="hero-sub">No jargon. No assumptions. Just plain English explanations of how GitHub works — and why it matters for everything you build.</p>
+  <div class="hero-stats">
+    <div class="stat"><div class="stat-num">7</div><div class="stat-label">Chapters</div></div>
+    <div class="stat"><div class="stat-num">60</div><div class="stat-label">Minutes</div></div>
+    <div class="stat"><div class="stat-num">0</div><div class="stat-label">Prerequisites</div></div>
+    <div class="stat"><div class="stat-num">∞</div><div class="stat-label">Use forever</div></div>
+  </div>
+  <button class="start-btn" onclick="scrollTo('ch1')">Start Learning →</button>
+</section>
+
+<!-- CONTENT -->
+<div class="content">
+
+  <!-- ── CHAPTER 1 ── -->
+  <div class="chapter" id="ch1">
+    <div class="chapter-header">
+      <div class="chapter-num">01</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Foundation · 8 minutes</div>
+        <h1 class="chapter-title">What is GitHub, really?</h1>
+        <span class="chapter-time">⏱ 0–8 min</span>
+      </div>
+    </div>
+
+    <h2>Think of it as Google Drive — but for code</h2>
+    <p>You already know what Google Drive does: it stores your files in the cloud, lets you access them from anywhere, and keeps a history of changes. <strong>GitHub does the same thing — but with a superpower: it remembers every single change you ever made, who made it, and why.</strong></p>
+
+    <div class="analogy">
+      <div class="analogy-label">Real-world analogy</div>
+      <p>Imagine you're writing a novel. Every time you make edits, instead of saving over the old version, you take a photograph of every page. You can go back to any photograph at any time. You can also share your novel with a friend, both edit different chapters at the same time, and then combine your changes. That's GitHub.</p>
+    </div>
+
+    <h2>Two things in one name</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📦</div>
+        <h3>Git</h3>
+        <p>The tool that tracks changes to your files. It runs on your computer. Think of it as the "save history" engine.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">☁️</div>
+        <h3>GitHub</h3>
+        <p>The website (github.com) that stores your Git history in the cloud. It's where you share, backup, and collaborate. GitHub is to Git what Google Drive is to your hard drive.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔗</div>
+        <h3>Together</h3>
+        <p>Git tracks changes locally on your computer. GitHub stores those changes online. You use both together — Git does the work, GitHub stores the result.</p>
+      </div>
+    </div>
+
+    <h2>Why should a non-developer care?</h2>
+    <p>You already used GitHub to deploy your AI learning app. Here's what GitHub actually gives you:</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">💾</div>
+        <h3>Backup</h3>
+        <p>Your code is safe even if your computer dies. Pull it down on any device in minutes.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⏪</div>
+        <h3>Undo anything</h3>
+        <p>Made a mistake that broke everything? Go back to any previous version instantly.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌍</div>
+        <h3>Free hosting</h3>
+        <p>GitHub Pages turns your repo into a live website — for free. You already used this.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">👥</div>
+        <h3>Collaboration</h3>
+        <p>Share your project with anyone. They can suggest changes without breaking your original.</p>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body"><p><strong>Key insight:</strong> GitHub is not just for developers. Writers, designers, researchers, and project managers all use it. Anything that involves files that change over time benefits from GitHub.</p></div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-label">Chapter 1 Summary</div>
+      <ul>
+        <li>Git = the save-history engine on your computer</li>
+        <li>GitHub = the website that stores your history in the cloud</li>
+        <li>Together they give you: backup, undo, free hosting, and collaboration</li>
+      </ul>
+    </div>
+
+    <div class="chapter-nav">
+      <span></span>
+      <a href="#ch2" class="next-ch" onclick="scrollTo('ch2')">Chapter 2: Key concepts →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 2 ── -->
+  <div class="chapter" id="ch2">
+    <div class="chapter-header">
+      <div class="chapter-num">02</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Concepts · 10 minutes</div>
+        <h1 class="chapter-title">The 6 words you need to know</h1>
+        <span class="chapter-time">⏱ 8–18 min</span>
+      </div>
+    </div>
+
+    <p>GitHub has its own vocabulary. Don't let the words intimidate you — each one has a simple, everyday equivalent. Learn these 6 words and you understand 90% of GitHub.</p>
+
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">📁</div>
+        <h3>Repository (Repo)</h3>
+        <p>A folder for your project. It contains all your files AND the full history of every change ever made. Think: <mark>project folder with memory</mark>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">📸</div>
+        <h3>Commit</h3>
+        <p>A saved snapshot of your files at a point in time. Like pressing save — but it remembers <em>what</em> you changed and <em>why</em>. Think: <mark>a photo of your work</mark>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⬆️</div>
+        <h3>Push</h3>
+        <p>Sending your local commits up to GitHub. Your changes go from your computer to the cloud. Think: <mark>uploading to Google Drive</mark>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⬇️</div>
+        <h3>Pull</h3>
+        <p>Downloading the latest changes from GitHub to your computer. Think: <mark>syncing from Google Drive</mark>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🌿</div>
+        <h3>Branch</h3>
+        <p>A separate copy of your project where you can experiment safely. Your main version stays untouched. Think: <mark>a rough draft that doesn't affect the original</mark>.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🔀</div>
+        <h3>Merge</h3>
+        <p>Combining changes from one branch back into your main version. Think: <mark>accepting tracked changes in Word</mark>.</p>
+      </div>
+    </div>
+
+    <h2>How they connect</h2>
+    <p>Here's the flow from making a change on your computer to it being live on GitHub:</p>
+
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="d-box">Edit files<br><small style="font-weight:400;font-size:11px;">on your computer</small></div>
+        <div class="d-arrow">→</div>
+        <div class="d-box accent">git add<br><small style="font-weight:400;font-size:11px;">select what to save</small></div>
+        <div class="d-arrow">→</div>
+        <div class="d-box blue">git commit<br><small style="font-weight:400;font-size:11px;">take the snapshot</small></div>
+        <div class="d-arrow">→</div>
+        <div class="d-box green">git push<br><small style="font-weight:400;font-size:11px;">send to GitHub</small></div>
+      </div>
+      <div class="d-label">The 3-step flow you'll use every single time</div>
+    </div>
+
+    <div class="analogy">
+      <div class="analogy-label">Real-world analogy</div>
+      <p>Think of it like sending a parcel. <strong>git add</strong> = packing items into a box. <strong>git commit</strong> = sealing the box and writing what's inside on the label. <strong>git push</strong> = handing the parcel to the courier (GitHub). Every step is deliberate — you decide what goes in, you label it, then you send it.</p>
+    </div>
+
+    <h2>What a commit actually looks like</h2>
+    <p>Every commit stores three things: what changed, a message you wrote explaining why, and a timestamp. This creates a complete history you can always scroll through.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">COMMIT HISTORY — what GitHub stores</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># GitHub shows you a history like this:</span>
+
+<span class="out">c9127ce</span>  Move hour files into hours folder     <span class="cm">← today, by adtprabhu</span>
+<span class="out">d4705a1</span>  Upload correct app files              <span class="cm">← 1 hour ago</span>
+<span class="out">9ae54d7</span>  Remove wrong folder                   <span class="cm">← 2 hours ago</span>
+<span class="out">3f1b59b</span>  First upload                          <span class="cm">← yesterday</span>
+
+<span class="cm"># Each line = one commit = one snapshot in time
+# You can go back to ANY of these at any time</span></pre>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-header">
+        <h3>Quick check — Chapter 2</h3>
+        <p>Make sure the 6 words are clear before moving on.</p>
+      </div>
+      <div class="quiz-body">
+        <div class="quiz-q" data-qid="0">
+          <div class="quiz-q-text">Q1. You've made changes to your files and want to save a snapshot. Which command do you use?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">git push</button>
+            <button class="quiz-opt" data-correct="0">git pull</button>
+            <button class="quiz-opt" data-correct="1">git commit</button>
+            <button class="quiz-opt" data-correct="0">git merge</button>
+          </div>
+          <div class="quiz-feedback">✅ Correct! git commit takes the snapshot. Remember: add → commit → push. Commit is step 2 — it seals and labels the box but doesn't send it yet.</div>
+        </div>
+        <div class="quiz-q" data-qid="1">
+          <div class="quiz-q-text">Q2. What is a "repository"?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">A command you type in the terminal</button>
+            <button class="quiz-opt" data-correct="1">A project folder that stores all your files plus the full history of changes</button>
+            <button class="quiz-opt" data-correct="0">A backup of just your latest files, nothing else</button>
+            <button class="quiz-opt" data-correct="0">A branch of your project</button>
+          </div>
+          <div class="quiz-feedback">✅ Correct! A repo is a project folder with memory. It stores every file AND the entire history of every change ever made to those files.</div>
+        </div>
+        <div class="quiz-q" data-qid="2">
+          <div class="quiz-q-text">Q3. You edited files on your computer and committed them. A colleague also made changes on GitHub. How do you get their changes onto your computer?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">git push</button>
+            <button class="quiz-opt" data-correct="1">git pull</button>
+            <button class="quiz-opt" data-correct="0">git commit</button>
+            <button class="quiz-opt" data-correct="0">git add</button>
+          </div>
+          <div class="quiz-feedback">✅ Correct! git pull downloads the latest changes from GitHub to your computer. Push = upload. Pull = download. You'll use both constantly.</div>
+        </div>
+        <div class="quiz-score"><div class="quiz-score-num"></div><p>Chapter 2 complete! You know the vocabulary now.</p></div>
+      </div>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch1" onclick="scrollTo('ch1')">← Chapter 1</a>
+      <a href="#ch3" class="next-ch" onclick="scrollTo('ch3')">Chapter 3: Your first repo →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 3 ── -->
+  <div class="chapter" id="ch3">
+    <div class="chapter-header">
+      <div class="chapter-num">03</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Hands-on · 10 minutes</div>
+        <h1 class="chapter-title">Setting up your first repository</h1>
+        <span class="chapter-time">⏱ 18–28 min</span>
+      </div>
+    </div>
+
+    <p>There are two ways to start a repo. Which one you use depends on whether you're starting fresh or if files already exist on your computer.</p>
+
+    <h2>Way 1: Start on GitHub, then download</h2>
+    <p>Best when starting a brand new project. Create the repo online, then download it.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"><div class="step-dot">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>Create on GitHub</h3>
+          <p>Go to github.com → click the <strong>+</strong> button → New repository. Give it a name, set it to Public, click Create.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"><div class="step-dot">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>Clone it to your computer</h3>
+          <p>Click the green <strong>Code</strong> button → copy the URL. Then in your terminal: <kbd>git clone [URL]</kbd>. This downloads the repo as a folder on your computer.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"><div class="step-dot">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>Start adding files</h3>
+          <p>Open the downloaded folder. Add your files inside it. Now you're ready to commit and push.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">TERMINAL — clone a repo</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Download a repo from GitHub to your computer</span>
+<span class="cmd">git clone https://github.com/yourusername/your-repo.git</span>
+
+<span class="cm"># This creates a folder with the same name as your repo
+# Go into it:</span>
+<span class="cmd">cd your-repo</span>
+
+<span class="cm"># Now you're inside the repo. Any files you add here
+# are tracked by Git automatically.</span></pre>
+    </div>
+
+    <h2>Way 2: Have files already? Turn the folder into a repo</h2>
+    <p>Best when you already have files on your computer and want to add GitHub to them.</p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">TERMINAL — turn existing folder into a repo</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Go into your existing folder</span>
+<span class="cmd">cd my-existing-project</span>
+
+<span class="cm"># Tell Git to start tracking this folder</span>
+<span class="cmd">git init</span>
+
+<span class="cm"># Connect it to a GitHub repo you created online</span>
+<span class="cmd">git remote add origin https://github.com/yourusername/your-repo.git</span>
+
+<span class="cm"># Add all files, commit, and push</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "First commit"</span>
+<span class="cmd">git push -u origin main</span></pre>
+    </div>
+
+    <div class="callout callout-info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body"><p><strong>What does <kbd>git remote add origin</kbd> mean?</strong> "Remote" = a GitHub repo online. "Origin" = the nickname we give it (it's just a shortcut name). So this command says: "Connect my local folder to this GitHub URL and call it 'origin' for short."</p></div>
+    </div>
+
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body"><p><strong>The dot in <kbd>git add .</kbd> matters!</strong> The dot means "add ALL files in this folder." Without the dot you'd have to list every file by name. With the dot, everything gets added at once.</p></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header">
+        <span class="ex-badge">TRY IT</span>
+        <h3>Create a test repo right now</h3>
+      </div>
+      <div class="exercise-body">
+        <p>Go to github.com and create a new public repo called <strong>test-repo</strong>. Don't add any files yet. Then copy the clone URL and run <kbd>git clone [URL]</kbd> in your terminal. Did a new folder appear on your computer?</p>
+        <button class="try-btn" onclick="toggleResult(this)">Show what success looks like</button>
+        <div class="try-result">After cloning, a folder named <strong>test-repo</strong> should appear wherever you ran the command. Run <kbd>ls</kbd> to see it. Go inside with <kbd>cd test-repo</kbd>. Run <kbd>ls -la</kbd> and you'll see a hidden <strong>.git</strong> folder — that's where Git stores all the history. Never delete or edit that folder.</div>
+      </div>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch2" onclick="scrollTo('ch2')">← Chapter 2</a>
+      <a href="#ch4" class="next-ch" onclick="scrollTo('ch4')">Chapter 4: Daily workflow →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 4 ── -->
+  <div class="chapter" id="ch4">
+    <div class="chapter-header">
+      <div class="chapter-num">04</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Core skill · 10 minutes</div>
+        <h1 class="chapter-title">The daily workflow: add → commit → push</h1>
+        <span class="chapter-time">⏱ 28–38 min</span>
+      </div>
+    </div>
+
+    <p>This is the workflow you'll use <strong>every single time</strong> you make changes. Once it's muscle memory, using GitHub becomes effortless. Three commands, always in this order.</p>
+
+    <div class="steps">
+      <div class="step">
+        <div class="step-line"><div class="step-dot">1</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>Make your changes</h3>
+          <p>Edit files, add new files, delete things — whatever you need to do in your project folder. Git is watching, but it doesn't act until you tell it to.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"><div class="step-dot">2</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>git add — choose what to save</h3>
+          <p>Tell Git which changed files to include in your next snapshot. <kbd>git add .</kbd> adds everything. <kbd>git add filename.html</kbd> adds just one file.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"><div class="step-dot">3</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>git commit — take the snapshot</h3>
+          <p>Seal the snapshot with a message describing what you did. This message is for you — write it clearly so future-you understands what happened.</p>
+        </div>
+      </div>
+      <div class="step">
+        <div class="step-line"><div class="step-dot">4</div><div class="step-connector"></div></div>
+        <div class="step-body">
+          <h3>git push — send to GitHub</h3>
+          <p>Upload your commits to GitHub. Now they're backed up online and your live site (if using GitHub Pages) will update automatically.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">TERMINAL — the daily workflow</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Step 1: See what's changed (always good to check first)</span>
+<span class="cmd">git status</span>
+<span class="out">On branch main
+Changes not staged for commit:
+  modified: index.html
+  modified: hours/hour-1.html</span>
+
+<span class="cm"># Step 2: Add everything</span>
+<span class="cmd">git add .</span>
+
+<span class="cm"># Step 3: Commit with a clear message</span>
+<span class="cmd">git commit -m "Fix typo in hour 1 lesson"</span>
+<span class="out">[main a3f2c1b] Fix typo in hour 1 lesson
+ 2 files changed, 4 insertions(+), 2 deletions(-)</span>
+
+<span class="cm"># Step 4: Push to GitHub</span>
+<span class="cmd">git push</span>
+<span class="out">To https://github.com/adtprabhu/ai-learning-app.git
+   c9127ce..a3f2c1b  main -> main</span>
+
+<span class="cm"># Done! Your changes are live on GitHub.</span></pre>
+    </div>
+
+    <h2>Writing good commit messages</h2>
+    <p>A commit message is a note to your future self. Here's the difference between good and bad messages:</p>
+
+    <div class="cards">
+      <div class="card" style="border-color: rgba(220,38,38,0.3);">
+        <div class="card-icon">❌</div>
+        <h3>Bad commit messages</h3>
+        <p style="color: var(--red);">"stuff"<br>"fix"<br>"changes"<br>"asdfgh"<br>"update 2 final FINAL"</p>
+      </div>
+      <div class="card" style="border-color: rgba(22,163,74,0.3);">
+        <div class="card-icon">✅</div>
+        <h3>Good commit messages</h3>
+        <p style="color: var(--green);">"Fix navigation links on mobile"<br>"Add quiz to hour 3 lesson"<br>"Remove wrong folder from repo"<br>"Update homepage headline text"</p>
+      </div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body"><p><strong>Pro tip:</strong> Write commit messages as if completing the sentence "This commit will..." — "Fix navigation links on mobile" = "This commit will fix navigation links on mobile." It forces clarity.</p></div>
+    </div>
+
+    <h2>git status — your best friend</h2>
+    <p>Before doing anything, run <kbd>git status</kbd>. It tells you exactly what's happening: which files changed, what's been added, what hasn't been committed yet. When something goes wrong, run <kbd>git status</kbd> first — it almost always tells you what to do next.</p>
+
+    <div class="exercise">
+      <div class="exercise-header">
+        <span class="ex-badge">TRY IT</span>
+        <h3>Complete the full workflow</h3>
+      </div>
+      <div class="exercise-body">
+        <p>In your test-repo folder, create a new file called <strong>notes.txt</strong> and write anything inside it. Then run the full workflow: <kbd>git add .</kbd> → <kbd>git commit -m "Add notes file"</kbd> → <kbd>git push</kbd>. Then go to github.com and check your repo — does the file appear?</p>
+        <button class="try-btn" onclick="toggleResult(this)">Show what to expect</button>
+        <div class="try-result">After pushing, refresh your GitHub repo page. You should see <strong>notes.txt</strong> listed alongside your README. Click it to see the contents. Also notice the commit message "Add notes file" appears next to the file — GitHub shows which commit last touched each file. This is the history at work.</div>
+      </div>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch3" onclick="scrollTo('ch3')">← Chapter 3</a>
+      <a href="#ch5" class="next-ch" onclick="scrollTo('ch5')">Chapter 5: Branches →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 5 ── -->
+  <div class="chapter" id="ch5">
+    <div class="chapter-header">
+      <div class="chapter-num">05</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Key concept · 8 minutes</div>
+        <h1 class="chapter-title">Branches — experiment without fear</h1>
+        <span class="chapter-time">⏱ 38–46 min</span>
+      </div>
+    </div>
+
+    <p>Branches are one of GitHub's most powerful features. They let you try new things — new designs, new features, risky changes — without touching your working version.</p>
+
+    <div class="analogy">
+      <div class="analogy-label">Real-world analogy</div>
+      <p>Think of branches like making a photocopy of a document before you start marking it up with red pen. The original is safe. You do your experiments on the copy. If you like the result, you replace the original. If you hate it, you throw the copy away.</p>
+    </div>
+
+    <h2>Main branch vs feature branches</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🏠</div>
+        <h3>main branch</h3>
+        <p>Your official, live version. This is what GitHub Pages serves to the world. Always keep this clean and working.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">🧪</div>
+        <h3>Feature branches</h3>
+        <p>Separate copies where you experiment. Named things like "add-dark-mode" or "redesign-header". If it works, merge it. If not, delete it — main is untouched.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">TERMINAL — working with branches</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># See all branches (star = the one you're on)</span>
+<span class="cmd">git branch</span>
+<span class="out">* main</span>
+
+<span class="cm"># Create a new branch and switch to it</span>
+<span class="cmd">git checkout -b redesign-homepage</span>
+<span class="out">Switched to a new branch 'redesign-homepage'</span>
+
+<span class="cm"># Now make changes, add, commit as normal
+# These commits ONLY exist on this branch</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "Try new homepage layout"</span>
+
+<span class="cm"># Switch back to main (your original is untouched)</span>
+<span class="cmd">git checkout main</span>
+
+<span class="cm"># Happy with the redesign? Merge it into main</span>
+<span class="cmd">git merge redesign-homepage</span>
+
+<span class="cm"># Done with the branch? Delete it</span>
+<span class="cmd">git branch -d redesign-homepage</span></pre>
+    </div>
+
+    <h2>The visual flow</h2>
+
+    <div class="diagram">
+      <div class="diagram-row">
+        <div class="d-box green">main ●</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box green">commit A</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box green">commit B</div>
+        <div class="d-arrow" style="opacity:0.3">→</div>
+        <div class="d-box" style="opacity:0.3">...</div>
+      </div>
+      <div style="margin: 8px 0; color: var(--ink2); font-size:13px;">↓ create branch here</div>
+      <div class="diagram-row">
+        <div class="d-box accent">feature ●</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box accent">try X</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box accent">try Y</div>
+        <div class="d-arrow">→</div>
+        <div class="d-box green">merge ✓</div>
+      </div>
+      <div class="d-label">main stays safe while you experiment on the branch</div>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body"><p><strong>For solo projects</strong> (like your AI learning app), you probably won't use branches much — working directly on main is fine. Branches become essential when collaborating with others or when you want to try risky changes without fear.</p></div>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header">
+        <span class="ex-badge">TRY IT</span>
+        <h3>Create and merge a branch</h3>
+      </div>
+      <div class="exercise-body">
+        <p>In your test repo, create a branch called <strong>experiment</strong>. Add a file called <strong>experiment.txt</strong>, commit it. Switch back to main — notice the file disappears! Now merge the branch. Does the file reappear?</p>
+        <button class="try-btn" onclick="toggleResult(this)">Show what to expect</button>
+        <div class="try-result">When you switch back to main with <kbd>git checkout main</kbd>, experiment.txt will vanish — it only exists on the experiment branch. After <kbd>git merge experiment</kbd>, it reappears on main. This is branches working perfectly: your main was safe the whole time, and you brought in only what you wanted.</div>
+      </div>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch4" onclick="scrollTo('ch4')">← Chapter 4</a>
+      <a href="#ch6" class="next-ch" onclick="scrollTo('ch6')">Chapter 6: Common fixes →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 6 ── -->
+  <div class="chapter" id="ch6">
+    <div class="chapter-header">
+      <div class="chapter-num">06</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Troubleshooting · 8 minutes</div>
+        <h1 class="chapter-title">When things go wrong — common fixes</h1>
+        <span class="chapter-time">⏱ 46–54 min</span>
+      </div>
+    </div>
+
+    <p>Every GitHub user hits these problems. None of them are scary once you know the fix. Here are the 6 most common errors you'll encounter and exactly how to solve them.</p>
+
+    <h2>Problem 1: "Please tell me who you are"</h2>
+    <p>Git doesn't know your name yet. This happens the first time you use Git on a computer.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">FIX</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cmd">git config --global user.email "you@example.com"</span>
+<span class="cmd">git config --global user.name "Your Name"</span>
+<span class="cm"># Run these once and Git remembers forever</span></pre>
+    </div>
+
+    <h2>Problem 2: "Authentication failed" when pushing</h2>
+    <p>You used your GitHub password instead of a Personal Access Token. GitHub stopped accepting passwords in 2021.</p>
+    <div class="callout callout-warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body"><p>When GitHub asks for a password in the terminal, <strong>it never means your account password</strong>. It always means a Personal Access Token (a long code starting with <strong>ghp_</strong>). Generate one at: github.com → Settings → Developer settings → Personal access tokens.</p></div>
+    </div>
+
+    <h2>Problem 3: "Updates were rejected — fetch first"</h2>
+    <p>GitHub has changes your computer doesn't have yet. You need to download them before you can upload yours.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">FIX</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Download the latest changes first</span>
+<span class="cmd">git pull</span>
+<span class="cm"># Then push your changes</span>
+<span class="cmd">git push</span></pre>
+    </div>
+
+    <h2>Problem 4: Committed the wrong thing</h2>
+    <p>You committed something by mistake and haven't pushed yet. Undo the commit but keep your file changes:</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">FIX — undo last commit, keep files</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Undo the last commit but keep your file changes</span>
+<span class="cmd">git reset --soft HEAD~1</span>
+<span class="cm"># Your files are still there, commit is gone
+# Now you can re-commit correctly</span></pre>
+    </div>
+
+    <h2>Problem 5: My GitHub Pages site shows a 404</h2>
+    <div class="cards">
+      <div class="card">
+        <div class="card-icon">🔍</div>
+        <h3>Check 1: index.html location</h3>
+        <p>index.html must be at the ROOT of your repo — not inside a subfolder. If it's in a folder, the site 404s.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⏳</div>
+        <h3>Check 2: Wait and refresh</h3>
+        <p>GitHub Pages takes 1–3 minutes to build after a push. Always wait before assuming it's broken.</p>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚙️</div>
+        <h3>Check 3: Pages settings</h3>
+        <p>Settings → Pages → Branch must be set to main. If it says "None", GitHub Pages isn't activated.</p>
+      </div>
+    </div>
+
+    <h2>Problem 6: "No such file or directory"</h2>
+    <p>You're in the wrong folder. Always check where you are before running Git commands.</p>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">FIX</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># See where you currently are</span>
+<span class="cmd">pwd</span>
+<span class="out">/Users/adtprabhu/Downloads</span>
+
+<span class="cm"># List what's in this folder</span>
+<span class="cmd">ls</span>
+<span class="out">ai-learning-app   Documents   Downloads</span>
+
+<span class="cm"># Navigate into your repo</span>
+<span class="cmd">cd ai-learning-app</span>
+
+<span class="cm"># Now run your git commands</span></pre>
+    </div>
+
+    <div class="callout callout-tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body"><p><strong>Golden rule:</strong> When anything goes wrong, run <kbd>git status</kbd> first. It shows exactly what state your repo is in and often suggests the exact command you need to fix it.</p></div>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch5" onclick="scrollTo('ch5')">← Chapter 5</a>
+      <a href="#ch7" class="next-ch" onclick="scrollTo('ch7')">Chapter 7: Cheat sheet →</a>
+    </div>
+  </div>
+
+  <!-- ── CHAPTER 7 ── -->
+  <div class="chapter" id="ch7">
+    <div class="chapter-header">
+      <div class="chapter-num">07</div>
+      <div class="chapter-meta">
+        <div class="chapter-tag">Reference · 6 minutes</div>
+        <h1 class="chapter-title">Your permanent cheat sheet</h1>
+        <span class="chapter-time">⏱ 54–60 min</span>
+      </div>
+    </div>
+
+    <p>Bookmark this page. Every command you'll ever need as a non-developer using GitHub, in plain English.</p>
+
+    <div class="cheatsheet">
+      <div class="cheatsheet-header">
+        <h3>📋 GitHub Commands — Plain English Edition</h3>
+      </div>
+      <div class="cheatsheet-grid">
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git status</div>
+          <div class="cheatsheet-desc">Show what's changed. Run this first when confused.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git add .</div>
+          <div class="cheatsheet-desc">Stage all changed files to be saved in the next commit.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git commit -m "message"</div>
+          <div class="cheatsheet-desc">Take a snapshot of staged files with a description.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git push</div>
+          <div class="cheatsheet-desc">Upload your commits to GitHub. Updates your live site.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git pull</div>
+          <div class="cheatsheet-desc">Download the latest changes from GitHub to your computer.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git clone [URL]</div>
+          <div class="cheatsheet-desc">Download a GitHub repo to your computer for the first time.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git log</div>
+          <div class="cheatsheet-desc">See the full history of all commits. Press Q to exit.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git diff</div>
+          <div class="cheatsheet-desc">Show exactly what changed in your files since last commit.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git checkout -b name</div>
+          <div class="cheatsheet-desc">Create a new branch and switch to it immediately.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git checkout main</div>
+          <div class="cheatsheet-desc">Switch back to your main branch.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git merge branchname</div>
+          <div class="cheatsheet-desc">Bring changes from a branch into your current branch.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git reset --soft HEAD~1</div>
+          <div class="cheatsheet-desc">Undo the last commit but keep your file changes.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">git rm -r foldername</div>
+          <div class="cheatsheet-desc">Delete a folder from the repo (then commit + push).</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">pwd</div>
+          <div class="cheatsheet-desc">Show which folder you're currently in.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">ls</div>
+          <div class="cheatsheet-desc">List all files and folders in the current directory.</div>
+        </div>
+        <div class="cheatsheet-item">
+          <div class="cheatsheet-cmd">cd foldername</div>
+          <div class="cheatsheet-desc">Go into a folder. cd .. goes up one level.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2>The one flow to remember</h2>
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><div class="code-dot code-dot-r"></div><div class="code-dot code-dot-y"></div><div class="code-dot code-dot-g"></div></div>
+        <div class="code-label">THE ONLY 3 COMMANDS YOU USE DAILY</div>
+        <button class="code-copy-btn" onclick="copyCode(this)">Copy</button>
+      </div>
+      <pre><span class="cm"># Do this every time you make changes:</span>
+<span class="cmd">git add .</span>
+<span class="cmd">git commit -m "Describe what you changed"</span>
+<span class="cmd">git push</span>
+
+<span class="cm"># That's it. Everything else is occasional.</span></pre>
+    </div>
+
+    <div class="quiz">
+      <div class="quiz-header">
+        <h3>Final quiz — the whole course</h3>
+        <p>Let's make sure everything has landed.</p>
+      </div>
+      <div class="quiz-body">
+        <div class="quiz-q" data-qid="q2-0">
+          <div class="quiz-q-text">Q1. You just edited 3 files and want to save them to GitHub. What is the correct order of commands?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">git push → git commit → git add .</button>
+            <button class="quiz-opt" data-correct="0">git commit → git add . → git push</button>
+            <button class="quiz-opt" data-correct="1">git add . → git commit -m "message" → git push</button>
+            <button class="quiz-opt" data-correct="0">git pull → git add . → git commit</button>
+          </div>
+          <div class="quiz-feedback">✅ Always: add → commit → push. Add stages the files, commit snapshots them, push sends them to GitHub.</div>
+        </div>
+        <div class="quiz-q" data-qid="q2-1">
+          <div class="quiz-q-text">Q2. You want to try a risky redesign without breaking your live site. What should you do?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">Make all the changes directly on main and hope for the best</button>
+            <button class="quiz-opt" data-correct="0">Delete the old files first, then add the new ones</button>
+            <button class="quiz-opt" data-correct="1">Create a new branch, experiment there, and merge only if it works</button>
+            <button class="quiz-opt" data-correct="0">Download the repo, make changes offline, re-upload</button>
+          </div>
+          <div class="quiz-feedback">✅ Branches exist exactly for this. Create a branch, experiment safely, merge if happy. Main stays untouched the whole time.</div>
+        </div>
+        <div class="quiz-q" data-qid="q2-2">
+          <div class="quiz-q-text">Q3. git push fails with "authentication failed". What's the most likely cause?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">Your internet is down</button>
+            <button class="quiz-opt" data-correct="0">You forgot to run git add first</button>
+            <button class="quiz-opt" data-correct="1">You used your GitHub account password instead of a Personal Access Token</button>
+            <button class="quiz-opt" data-correct="0">Your repo is set to Private</button>
+          </div>
+          <div class="quiz-feedback">✅ GitHub requires a Personal Access Token (ghp_...) as the password in the terminal — not your account password. Generate one at github.com → Settings → Developer settings → Personal access tokens.</div>
+        </div>
+        <div class="quiz-q" data-qid="q2-3">
+          <div class="quiz-q-text">Q4. What is the difference between git and GitHub?</div>
+          <div class="quiz-opts">
+            <button class="quiz-opt" data-correct="0">They are the same thing — different names for the same product</button>
+            <button class="quiz-opt" data-correct="1">Git is the tool that tracks changes on your computer; GitHub is the website that stores those changes in the cloud</button>
+            <button class="quiz-opt" data-correct="0">GitHub is the tool on your computer; git is the website</button>
+            <button class="quiz-opt" data-correct="0">Git is free; GitHub always costs money</button>
+          </div>
+          <div class="quiz-feedback">✅ Git = local tool that tracks changes. GitHub = website that stores your Git history in the cloud. You use both together. Git does the work, GitHub stores the result.</div>
+        </div>
+        <div class="quiz-score"><div class="quiz-score-num"></div><p>🎉 You've completed the GitHub crash course!</p></div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="summary-label">🎓 You now know how to...</div>
+      <ul>
+        <li>Explain what Git and GitHub are, and how they're different</li>
+        <li>Use the 6 core words: repo, commit, push, pull, branch, merge</li>
+        <li>Create a new repository from scratch or from existing files</li>
+        <li>Run the daily workflow: add → commit → push</li>
+        <li>Write clear commit messages that make sense later</li>
+        <li>Create branches to experiment safely</li>
+        <li>Fix the 6 most common GitHub errors</li>
+        <li>Use a cheat sheet for any command you forget</li>
+      </ul>
+    </div>
+
+    <div class="chapter-nav">
+      <a href="#ch6" onclick="scrollTo('ch6')">← Chapter 6</a>
+      <a href="#ch1" onclick="scrollTo('ch1')">↑ Back to top</a>
+    </div>
+  </div>
+
+</div><!-- /content -->
+
+<script>
+// ── SCROLL TO CHAPTER ──
+function scrollTo(id) {
+  const el = document.getElementById(id);
+  if (el) el.scrollIntoView({ behavior: 'smooth' });
+}
+
+// ── PROGRESS BAR ──
+window.addEventListener('scroll', () => {
+  const total = document.body.scrollHeight - window.innerHeight;
+  const pct = Math.min(100, (window.scrollY / total) * 100);
+  document.getElementById('progressBar').style.width = pct + '%';
+
+  // Update timer
+  const mins = Math.round((pct / 100) * 60);
+  document.getElementById('navTime').textContent = `⏱ ${mins} min`;
+
+  // Update active nav chapter
+  const chapters = ['ch1','ch2','ch3','ch4','ch5','ch6','ch7'];
+  const btns = document.querySelectorAll('.nav-ch');
+  let active = 0;
+  chapters.forEach((id, i) => {
+    const el = document.getElementById(id);
+    if (el && el.getBoundingClientRect().top <= 100) active = i;
+  });
+  btns.forEach((b, i) => b.classList.toggle('active', i === active));
+});
+
+// ── QUIZ ──
+let quizScores = {};
+document.querySelectorAll('.quiz-opt').forEach(opt => {
+  opt.addEventListener('click', () => {
+    const q = opt.closest('.quiz-q');
+    if (q.dataset.answered) return;
+    q.dataset.answered = '1';
+    const correct = opt.dataset.correct === '1';
+    opt.classList.add(correct ? 'correct' : 'wrong');
+    q.querySelectorAll('.quiz-opt').forEach(o => o.disabled = true);
+    if (!correct) q.querySelectorAll('[data-correct="1"]').forEach(o => o.classList.add('correct'));
+    const fb = q.querySelector('.quiz-feedback');
+    fb.classList.add('show', correct ? 'ok' : 'bad');
+    const quiz = q.closest('.quiz');
+    const qid = quiz.id + '_' + q.dataset.qid;
+    quizScores[qid] = correct ? 1 : 0;
+
+    // Check if all questions in this quiz answered
+    const allQs = quiz.querySelectorAll('.quiz-q');
+    const prefix = quiz.id + '_';
+    const answered = Object.keys(quizScores).filter(k => k.startsWith(prefix)).length;
+    if (answered === allQs.length) {
+      const score = Object.entries(quizScores).filter(([k]) => k.startsWith(prefix)).reduce((a,[,v]) => a+v, 0);
+      const sc = quiz.querySelector('.quiz-score');
+      sc.querySelector('.quiz-score-num').textContent = score + '/' + allQs.length;
+      sc.style.display = 'block';
+    }
+  });
+});
+
+// ── EXERCISE REVEAL ──
+function toggleResult(btn) {
+  const res = btn.nextElementSibling;
+  res.classList.toggle('show');
+  btn.textContent = res.classList.contains('show') ? 'Hide answer' : 'Show what success looks like';
+}
+
+// ── COPY CODE ──
+function copyCode(btn) {
+  const pre = btn.closest('.code-block').querySelector('pre');
+  // Strip HTML tags to get plain text
+  const text = pre.innerText;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = 'Copied!';
+    setTimeout(() => btn.textContent = 'Copy', 1500);
+  });
+}
+
+// ── QUIZ IDs — ensure uniqueness across multiple quizzes ──
+document.querySelectorAll('.quiz').forEach((quiz, qi) => {
+  quiz.id = 'quiz' + qi;
+});
+</script>
+
+</body>
+</html>
